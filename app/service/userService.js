@@ -123,11 +123,16 @@ class UserService extends Service {
           maxAge: 3600 * 1000,
           path: '/',
         });
-        return Object.assign(SUCCESS, {
+
+        const token = ctx.helper.getToken(user.username);
+       
+        let dataObj = Object.assign(SUCCESS, {
           data: Object.assign(user, {
             password: '',
           }),
-        });
+        })
+        dataObj.token = token
+        return dataObj;
       }
       return Object.assign(ERROR, {
         msg: '密码错误！',

@@ -2,7 +2,7 @@
 
 module.exports = {
     // 生成token
-    getToken(value){
-        return this.app.jwt.sign(value, this.app.config.jwt.secret);
+    getToken(data){
+        return this.app.jwt.sign(data, this.app.config.jwt.secret);
     },
 };
