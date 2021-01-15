@@ -2,20 +2,16 @@
 
 const Service = require('egg').Service;
 const md5 = require('js-md5')
-const {
-  ERROR,
-  SUCCESS,
-} = require('../util/util');
+const { ERROR, SUCCESS, } = require('../util/util');
+
 class UserService extends Service {
   async create(user) {
-    const {
-      ctx,
-    } = this;
+    const {ctx, } = this;
     try {
       if (!user.username || !user.password) {
         ctx.status = 400;
         return Object.assign(ERROR, {
-          msg: `expected an object with username, password but got: ${JSON.stringify(user)}`,
+          msg: `数据不完整，收到的数据为: ${JSON.stringify(user)}`,
         });
       }
       const md5Passwd = md5(user.password)
@@ -36,7 +32,7 @@ class UserService extends Service {
       }
       ctx.status = 406;
       return Object.assign(ERROR, {
-        msg: 'username already exists',
+        msg: '用户名已存在！',
       });
 
     } catch (error) {
@@ -54,7 +50,7 @@ class UserService extends Service {
       if (!user) {
         ctx.status = 400;
         return Object.assign(ERROR, {
-          msg: 'user not found',
+          msg: '用户不存在！',
         });
       }
       user.destroy();
@@ -77,7 +73,7 @@ class UserService extends Service {
       if (!userDB) {
         ctx.status = 400;
         return Object.assign(ERROR, {
-          msg: 'user not found',
+          msg: '用户不存在！',
         });
       }
       const md5Passwd = md5(user.password)
@@ -107,7 +103,7 @@ class UserService extends Service {
       });
       if (!user) {
         return Object.assign(ERROR, {
-          msg: 'username is error',
+          msg: '找不到用户！',
         });
       }
       if (md5(password) === user.password) {
@@ -132,7 +128,7 @@ class UserService extends Service {
         });
       }
       return Object.assign(ERROR, {
-        msg: 'password is error',
+        msg: '密码错误！',
       });
 
 
@@ -156,7 +152,7 @@ class UserService extends Service {
       if (!user) {
         ctx.status = 401;
         return Object.assign(ERROR, {
-          msg: 'user not found',
+          msg: '找不到用户！',
         });
       }
       ctx.status = 200;
