@@ -7,20 +7,21 @@ const { ERROR, SUCCESS, } = require('../util/util');
 class UserService extends Service {
   async create(user) {
     const {ctx, } = this;
+    const { username, password } = ctx.request.body;
     try {
-      if (!user.username || !user.password) {
+      if (!username || !password) {
         ctx.status = 400;
         return Object.assign(ERROR, {
-          msg: `数据不完整，收到的数据为: ${JSON.stringify(user)}`,
+          msg: `数据不完整，收到的数据为: ${JSON.stringify(ctx.request.body)}`,
         });
       }
-      const md5Passwd = md5(user.password)
-      user = Object.assign(user, {
+      const md5Passwd = md5(password)
+      user = Object.assign(ctx.request.body, {
         password: md5Passwd,
       });
       const userDB = await ctx.model.User.findOne({
         where: {
-          username: user.username,
+          username: username,
         },
       });
       if (!userDB) {
@@ -46,7 +47,7 @@ class UserService extends Service {
       ctx,
     } = this;
     try {
-      const user = await ctx.model.User.findById(id);
+      const user = await ctx.model.User.findByPk(id);
       if (!user) {
         ctx.status = 400;
         return Object.assign(ERROR, {
@@ -60,6 +61,7 @@ class UserService extends Service {
       });
 
     } catch (error) {
+      console.log(222, error)
       ctx.throw(500);
     }
   }
@@ -69,7 +71,7 @@ class UserService extends Service {
       ctx,
     } = this;
     try {
-      const userDB = await ctx.model.User.findById(id);
+      const userDB = await ctx.model.User.findByPk(id);
       if (!userDB) {
         ctx.status = 400;
         return Object.assign(ERROR, {
@@ -143,7 +145,7 @@ class UserService extends Service {
       ctx,
     } = this;
     try {
-      const user = await ctx.model.User.findById(id, {
+      const user = await ctx.model.User.findByPk(id, {
         include: [{
           model: ctx.model.Authority,
           attributes: [ 'id', 'name' ],
