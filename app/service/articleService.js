@@ -93,11 +93,26 @@ class ArticleService extends Service {
 
   async getArticles({ }) {
     const { ctx, } = this;
+    let pageSize = toInt(ctx.query.limit)||10;
+    let current = toInt(ctx.query.offset)||1;
+    let json={};
+    let keyword = ctx.query.keyword;
+    if(keyword){
+       json=Object.assign({"title":{$regex:new RegExp(keyword)}});
+    }
+    let total =await ctx.model.Article.findAll(json);
+    console.log(223, total.length)
     try {
-      const query = { limit: toInt(ctx.query.limit), offset: toInt(ctx.query.offset) };
-      const res = await ctx.model.Article.findAll(query);
+      const query = { limit: pageSize, offset: current };
+      const res = await ctx.model.Article.findAll();
+      console.log(111, res)
       return Object.assign(SUCCESS, {
         data: res,
+        pagination: {
+          current: current,
+          pageSize: pageSize,
+          total: total.length
+        }
       });
     } catch (error) {
       ctx.status = 500;
