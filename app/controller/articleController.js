@@ -21,12 +21,7 @@ class ArticleController extends Controller {
  
    async update() {
      const { ctx, } = this;
-     const id = +ctx.params.id;
-     const user = ctx.request.body;
-     ctx.body = await ctx.service.articleService.update({
-       id,
-       user,
-     });
+     ctx.body = await ctx.service.articleService.update(ctx.request.body);
    }
  
    async getArticles() {

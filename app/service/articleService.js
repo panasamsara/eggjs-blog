@@ -11,14 +11,14 @@ function toInt(str) {
 }
 
 class ArticleService extends Service {
-  async create(article) {
+  async create({ params }) {
     const {ctx, } = this;
-    const { title, content, tag_ids } = ctx.request.body;
+    const { title, content, tag_ids } = params;
     try {
       if (!title || !content) {
         ctx.status = 400;
         return Object.assign(ERROR, {
-          msg: `数据不完整，收到的数据为: ${JSON.stringify(ctx.request.body)}`,
+          msg: `数据不完整，收到的数据为: ${JSON.stringify(params)}`,
         });
       }
       const articleDB = await ctx.model.Article.findOne({
@@ -27,7 +27,7 @@ class ArticleService extends Service {
         },
       });
       if (!articleDB) {
-        const res = await this.ctx.model.Article.create(ctx.request.body);
+        const res = await this.ctx.model.Article.create(params);
         ctx.status = 201;
         return Object.assign(SUCCESS, {
           data: res,
@@ -66,21 +66,17 @@ class ArticleService extends Service {
     }
   }
 
-  async update({ id, article }) {
+  async update({ params }) {
     const { ctx, } = this;
     try {
-      const articleDB = await ctx.model.Article.findByPk(id);
+      const articleDB = await ctx.model.Article.findByPk(params.id);
       if (!articleDB) {
         ctx.status = 400;
         return Object.assign(ERROR, {
-          msg: '用户不存在！',
+          msg: '数据不存在！',
         });
       }
-      const md5Passwd = md5(article.content)
-      article = Object.assign(article, {
-        content: md5Passwd,
-      });
-      const res = await articleDB.update(article);
+      const res = await articleDB.update(params);
       ctx.status = 200;
       return Object.assign(SUCCESS, {
         data: res,
@@ -101,11 +97,10 @@ class ArticleService extends Service {
        json=Object.assign({"title":{$regex:new RegExp(keyword)}});
     }
     let total =await ctx.model.Article.findAll(json);
-    console.log(223, total.length)
+    // console.log(223, total.length)
     try {
       const query = { limit: pageSize, offset: current };
       const res = await ctx.model.Article.findAll();
-      console.log(111, res)
       return Object.assign(SUCCESS, {
         data: res,
         pagination: {
