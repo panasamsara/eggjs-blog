@@ -14,4 +14,5 @@ module.exports = app => {
   router.post('/index', jwt, controller.login.index);
   
   require('./router/user')(app);
+  require('./router/article')(app);
 };
