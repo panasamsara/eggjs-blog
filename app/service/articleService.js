@@ -44,10 +44,10 @@ class ArticleService extends Service {
     }
   }
 
-  async del(id) {
+  async del({ params }) {
     const { ctx, } = this;
     try {
-      const article = await ctx.model.Article.findByPk(id);
+      const article = await ctx.model.Article.findByPk(params.id);
       if (!article) {
         ctx.status = 400;
         return Object.assign(ERROR, {
@@ -61,7 +61,6 @@ class ArticleService extends Service {
       });
 
     } catch (error) {
-      console.log(222, error)
       ctx.throw(500);
     }
   }

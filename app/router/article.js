@@ -10,6 +10,6 @@ module.exports = app => {
     // app.get('/api/articles/:id', 'articleController.find');
     // app.get('/api/articles/:id/edit', 'articleController.find');
 
-    // app.post('/api/deleteArticle', controller.articleController.destroy);
+    app.post('/api/deleteArticle', controller.articleController.destroy);
 
 };

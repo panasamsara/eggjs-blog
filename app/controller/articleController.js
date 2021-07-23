@@ -15,8 +15,8 @@ class ArticleController extends Controller {
  
    async destroy() {
      const { ctx, } = this;
-     const id = +ctx.params.id;
-     ctx.body = await ctx.service.articleService.del(id);
+     const id = ctx.params.id;
+     ctx.body = await ctx.service.articleService.del(ctx.request.body);
    }
  
    async update() {
